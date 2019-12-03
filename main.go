@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"go/ast"
 	"log"
+	"os"
 
 	"golang.org/x/tools/go/packages"
 )
 
-func dump(pkgNames ...string) error {
+func dump(pkgNames []string) error {
 	cfg := &packages.Config{
 		Mode: packages.NeedCompiledGoFiles | packages.NeedSyntax | packages.NeedTypes | packages.NeedTypesInfo,
 	}
@@ -29,7 +30,11 @@ func dump(pkgNames ...string) error {
 }
 
 func main() {
-	if err := dump("."); err != nil {
+	pkgNames := []string{"."}
+	if len(os.Args) > 1 {
+		pkgNames = os.Args[1:]
+	}
+	if err := dump(pkgNames); err != nil {
 		log.Fatalf("error: %s", err)
 	}
 }
